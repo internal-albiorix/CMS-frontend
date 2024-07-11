@@ -1,0 +1,243 @@
+{
+  "dashboard": {
+    "cardData": {},
+    "tableData": {
+      "latestCandidates": [
+        {
+          "fName": "Abc",
+          "mName": "Mno",
+          "lName": "Pqr"
+        },
+        {
+          "fName": "Mno",
+          "mName": "Abc",
+          "lName": "Xyz"
+        },
+        {
+          "fName": "Xyz",
+          "mName": "Pqr",
+          "lName": "Abc"
+        },
+        {
+          "fName": "Abc 1",
+          "mName": "Mno 1",
+          "lName": "Pqr 1"
+        },
+        {
+          "fName": "Mno 1",
+          "mName": "Abc 1",
+          "lName": "Xyz 1"
+        },
+        {
+          "fName": "Abc 2",
+          "mName": "Mno 2",
+          "lName": "Pqr 2"
+        },
+        {
+          "fName": "Mno 2",
+          "mName": "Abc 2",
+          "lName": "Xyz 2"
+        },
+        {
+          "fName": "Abc 3",
+          "mName": "Mno 3",
+          "lName": "Pqr 3"
+        }
+      ],
+      "upcomingInterviews": [
+        {
+          "fName": "Abc",
+          "mName": "Mno",
+          "lName": "Pqr"
+        },
+        {
+          "fName": "Mno",
+          "mName": "Abc",
+          "lName": "Xyz"
+        },
+        {
+          "fName": "Xyz",
+          "mName": "Pqr",
+          "lName": "Abc"
+        },
+        {
+          "fName": "Abc 1",
+          "mName": "Mno 1",
+          "lName": "Pqr 1"
+        },
+        {
+          "fName": "Mno 1",
+          "mName": "Abc 1",
+          "lName": "Xyz 1"
+        },
+        {
+          "fName": "Abc 3",
+          "mName": "Mno 3",
+          "lName": "Pqr 3"
+        }
+      ]
+    },
+    "graphData": [
+      {
+        "month": "Jan 23",
+        "number": 11
+      },
+      {
+        "month": "Feb 23",
+        "number": 5
+      },
+      {
+        "month": "March 23",
+        "number": 7
+      },
+      {
+        "month": "April 23",
+        "number": 18
+      },
+      {
+        "month": "May 23",
+        "number": 10
+      },
+      {
+        "month": "June 23",
+        "number": 15
+      },
+      {
+        "month": "July 23",
+        "number": 4
+      },
+      {
+        "month": "Aug 23",
+        "number": 2
+      },
+      {
+        "month": "Sept 23",
+        "number": 5
+      },
+      {
+        "month": "Oct 23",
+        "number": 11
+      },
+      {
+        "month": "Nov 23",
+        "number": 6
+      },
+      {
+        "month": "Dec 23",
+        "number": 2
+      }
+    ]
+  },
+  "user": [
+    {
+      "fullname": "New added qqq",
+      "email": "abcd@a11.com",
+      "designation": "Sr. Software Engineer",
+      "mobilenumber": 2222222222,
+      "technology": [
+        "React",
+        "Java",
+        "Angular",
+        ".Net",
+        "HR",
+        "ROR"
+      ],
+      "role": "Interiewer",
+      "status": "Active",
+      "password": "Ss@123123123",
+      "confirmpassword": "Ss@123123",
+      "id": 3
+    }
+  ],
+  "currentOpening": [
+    {
+      "technology": "Java",
+      "designation": "Software Engineer",
+      "experience": "5 Years",
+      "noofopening": 2,
+      "id": 1
+    },
+    {
+      "technology": "React",
+      "designation": "Trainee",
+      "experience": "1 year",
+      "noofopening": 5,
+      "id": 3
+    },
+    {
+      "technology": ".Net",
+      "designation": "Software Engineer",
+      "experience": "4 Years",
+      "noofopening": 4,
+      "id": 4
+    },
+    {
+      "technology": "React",
+      "designation": "Team Lead",
+      "experience": "6+ Year",
+      "noofopening": 3,
+      "id": 6
+    }
+  ],
+  "referEmployee": [
+    {
+      "empFullName": "New qwe",
+      "empEmail": "test@qwe.com",
+      "empMobile": "9999999999",
+      "candidateFullName": "New added qwe",
+      "candidateEmail": "test@qwe.com",
+      "candidateMobile": "1234567890",
+      "technology": [
+        "Angular js",
+        "Dot net",
+        "Vue js",
+        "React js",
+        "Node js"
+      ],
+      "candidateExp": 3,
+      "id": 1
+    },
+    {
+      "empFullName": "Test added",
+      "empEmail": "test@test.test",
+      "empMobile": "1234567890",
+      "candidateFullName": "New@emp.com",
+      "candidateEmail": "New@emp.com",
+      "candidateMobile": "9876543210",
+      "technology": [
+        "Vue js",
+        "Node js"
+      ],
+      "candidateExp": 10,
+      "id": 2
+    },
+    {
+      "empFullName": "Qwerty qwe",
+      "empEmail": "qwe@q12.qq",
+      "empMobile": "1111111111",
+      "candidateFullName": "asdf",
+      "candidateEmail": "asdf@as12.asdf",
+      "candidateMobile": "2222222222",
+      "technology": [
+        "Dot net"
+      ],
+      "candidateExp": 5,
+      "id": 3
+    },
+    {
+      "empFullName": "Qwe123",
+      "empEmail": "abc@ab.com",
+      "empMobile": "1234567890",
+      "candidateFullName": "Zxcv",
+      "candidateEmail": "zxcv@zx.com",
+      "candidateMobile": "1234567890",
+      "technology": [
+        "Angular js",
+        "Vue js"
+      ],
+      "candidateExp": 2,
+      "id": 4
+    }
+  ],
+  "users": {}
+}

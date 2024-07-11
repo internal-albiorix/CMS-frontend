@@ -1,0 +1,1 @@
+- components - stores individual components

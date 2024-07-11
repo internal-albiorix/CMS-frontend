@@ -1,0 +1,1 @@
+- store - redux things are here (actions, reducers)
