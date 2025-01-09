@@ -10,9 +10,9 @@ import {
   DialogActions,
   Box,
 } from "@mui/material";
-import { Form, Formik } from "formik";
 import * as yup from "yup";
 import Delete from "@mui/icons-material/Delete";
+import { Form, Formik } from "formik";
 import Edit from "@mui/icons-material/Edit";
 import Add from "@mui/icons-material/Add";
 import Email from "@mui/icons-material/Email";
@@ -35,7 +35,7 @@ import { getAllTechnology } from "../../services/TechnologyService";
 import { getAllDesignation } from "../../services/DesignationService";
 import { getSecureLocalStorage } from "../../helpers/SecureLocalStorage";
 import { DropdownModel } from "../../models/DropdownModel";
-
+import ErrorMessage from "../../common/Controls/ErrorMessage";
 
 const CurrentOpening: React.FC = () => {
   const roles = getSecureLocalStorage("role");
@@ -110,7 +110,7 @@ const CurrentOpening: React.FC = () => {
         {roles !== "3" ? (
           <Box sx={{ height: "45px" }}>
             <Button
-              sx={{ float: "right"}}
+              sx={{ float: "right" }}
               variant="contained"
               color="error"
               onClick={handleClickInsertOpen}
@@ -119,13 +119,13 @@ const CurrentOpening: React.FC = () => {
               Add new
             </Button>
             <Button
-              sx={{ float: "right", marginRight: 1  }}
+              sx={{ float: "right", marginRight: 1 }}
               variant="contained"
               color="success"
-              onClick={ handleClickEmailSent}
+              onClick={handleClickEmailSent}
               startIcon={<Email />}
             >
-             Sent Mail
+              Sent Mail
             </Button>
           </Box>
         ) : null}
@@ -141,10 +141,10 @@ const CurrentOpening: React.FC = () => {
 
   const handleClickEmailSent = async () => {
     var res = await sentEmailCurrentOpening("CurrentOpening");
-    if(res.success){
+    if (res.success) {
       toast.success(res.message);
     }
-    else{
+    else {
       toast.error(res.message);
     }
   };
@@ -236,8 +236,9 @@ const CurrentOpening: React.FC = () => {
       designationId: yup.string().required("Designation is required"),
       experience: yup.string().required("Experience is required"),
       noofopening: yup
-        .string()
-        .matches(/^[0-9]+$/, "Invalid value")
+        .number()
+        .max(100 ,"No of Opening must be less than or equal to 100")
+        .min(1,"No of Opening must be greater than or equal to 1")
         .required("No of Opening is required"),
     });
     const initialValues = {
@@ -269,81 +270,87 @@ const CurrentOpening: React.FC = () => {
         onSubmit={onFormSubmit}
         enableReinitialize
       >
-        <Form id={`${model.ops}CurrentOpening`}>
-          <DialogTitle sx={{ m: 0, p: 2 }}>
-            {model.ops} Current Opening
-            <IconButton
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-              onClick={handleModelClose}
-            >
-              {" "}
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
+        {({ touched, errors }) => (
+          <Form id={`${model.ops}CurrentOpening`}>
+            <DialogTitle sx={{ m: 0, p: 2 }}>
+              {model.ops} Current Opening
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+                onClick={handleModelClose}
+              >
+                {" "}
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
 
-          <DialogContent dividers>
-            {model.ops !== "Delete" ? (
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <SelectDropdown
-                    items={technologyData}
-                    label="Technology"
-                    name="technologyId"
-                    valueField="id"
-                    showField="technologyName"
-                  />
+            <DialogContent dividers>
+              {model.ops !== "Delete" ? (
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <SelectDropdown
+                      items={technologyData}
+                      label="Technology"
+                      name="technologyId"
+                      valueField="id"
+                      showField="technologyName"
+                    />
+                    <ErrorMessage touched={touched.technologyId} errors={errors.technologyId} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <SelectDropdown
+                      items={designationData}
+                      label="Designation"
+                      name="designationId"
+                      valueField="id"
+                      showField="designationName"
+                    />
+                    <ErrorMessage touched={touched.designationId} errors={errors.designationId} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInput label="Experience" name="experience" />
+                    <ErrorMessage touched={touched.experience} errors={errors.experience} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInput
+                      label="No Of Openings"
+                      name="noofopening"
+                      type="number"
+                    />
+                    <ErrorMessage touched={touched.noofopening} errors={errors.noofopening} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <SelectDropdown
-                    items={designationData}
-                    label="Designation"
-                    name="designationId"
-                    valueField="id"
-                    showField="designationName"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextInput label="Experience" name="experience" />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextInput
-                    label="No Of Openings"
-                    name="noofopening"
-                    type="number"
-                  />
-                </Grid>
-              </Grid>
-            ) : (
-              <Typography gutterBottom>
-                Are you sure want to delete this record?
-              </Typography>
-            )}
-          </DialogContent>
+              ) : (
+                <Typography gutterBottom>
+                  Are you sure want to delete this record?
+                </Typography>
+              )}
+            </DialogContent>
 
-          <DialogActions>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleModelClose}
-            >
-              {" "}
-              Cancel{" "}
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<SaveIcon />}
-              type="submit"
-            >
-              {model.ops}
-            </Button>
-          </DialogActions>
-        </Form>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleModelClose}
+              >
+                {" "}
+                Cancel{" "}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<SaveIcon />}
+                type="submit"
+              >
+                {model.ops}
+              </Button>
+            </DialogActions>
+          </Form>
+        )}
       </Formik>
     );
   };

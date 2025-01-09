@@ -35,7 +35,7 @@ import { useGoogleAuth } from "./GoogleAuth";
 import { generateEventDescription } from "./EmailDescription";
 import { candidateDataModel } from "../../models/CandidateModel";
 import { getAppointMentsCandidate } from "../../services/CandidateService";
-const clientId =process.env.REACT_APP_CLIENT_ID;
+const clientId = process.env.REACT_APP_CLIENT_ID;
 const discoveryDocs = [process.env.REACT_APP_DISCOVERY_DOCS];
 const location = process.env.REACT_APP_LOCATION;
 const timeZone = process.env.REACT_APP_TIMEZONE;
@@ -210,7 +210,7 @@ const ScheduleCalander: React.FC = () => {
   const createOrUpdateEvent = async () => {
     await window.gapi.load('client', async () => {
       await window.gapi.client.init({
-        discoveryDocs:discoveryDocs,
+        discoveryDocs: discoveryDocs,
       });
       window.gapi.client.setToken({ access_token: accessToken });
 
@@ -221,9 +221,9 @@ const ScheduleCalander: React.FC = () => {
           request = window.gapi.client.calendar.events.delete({
             calendarId: 'primary',
             eventId: eventId,
-            sendUpdates: 'all', 
+            sendUpdates: 'all',
           });
-          request.execute((response:any) => {
+          request.execute((response: any) => {
             console.log('Event deleted:', response);
             deleteInterviewScheduleop(interviewScheduleDetail.data.id);
           });
@@ -260,6 +260,12 @@ const ScheduleCalander: React.FC = () => {
               { method: 'popup', minutes: 10 }
             ]
           },
+          attachments: [
+            {
+              fileUrl: candidate?.driveLink,
+              title: candidate?.resume,
+            }
+          ],
         };
         if (parseInt(interviewScheduleDetail.data.id) > 0) {
           request = window.gapi.client.calendar.events.update({
@@ -268,6 +274,7 @@ const ScheduleCalander: React.FC = () => {
             resource: event,
             conferenceDataVersion: 1,
             sendUpdates: 'all',
+            supportsAttachments: true
           });
         }
         else {
@@ -276,6 +283,7 @@ const ScheduleCalander: React.FC = () => {
             resource: event,
             conferenceDataVersion: 1,
             sendUpdates: 'all',
+            supportsAttachments: true
           });
         }
         request.execute((event: any) => {
@@ -426,7 +434,7 @@ const ScheduleCalander: React.FC = () => {
   );
 };
 const ScheduleInterview = () => (
-  <GoogleOAuthProvider clientId={clientId||''}>
+  <GoogleOAuthProvider clientId={clientId || ''}>
     <ScheduleCalander />
   </GoogleOAuthProvider>
 );

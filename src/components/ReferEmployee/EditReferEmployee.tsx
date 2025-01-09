@@ -21,6 +21,7 @@ import { DropdownModel } from "../../models/DropdownModel";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorMessage from "../../common/Controls/ErrorMessage";
 
 const EditReferEmployee = (props: any) => {
   useEffect(() => {
@@ -70,12 +71,11 @@ const EditReferEmployee = (props: any) => {
       .required("Your mobile required"),
     candidateFullName: yup.string().max(30).required("Candidate name required"),
     candidateEmail: yup.string().email().required("Candidate mail required"),
-    candidateMobileNumber: yup
+      candidateMobileNumber: yup
       .string()
-      .matches(/^[0-9]+$/, "Invalid value")
-      .length(10, "Invalid value")
-      .required("Employee mobile required"),
-    technologyIds: yup.array().min(1).required("Minimum 1 technology required"),
+      .required("Mobile number required")
+      .matches(/^[0-9]+$/, "Invalid Mobile Number"),
+    technologyIds: yup.array().min(1, "Minimum 1 technology required"),
     candidateExperience: yup.string().required("Candidate experience required"),
     // resume: yup.mixed().notRequired()
     // .required('Candidate resume is required')
@@ -118,7 +118,7 @@ const EditReferEmployee = (props: any) => {
           onSubmit={onFormSubmit}
           enableReinitialize
         >
-          {({ setFieldValue }) => (
+          {({ setFieldValue, touched, errors }) => (
             <Form id="editReferEmployee">
               <DialogTitle sx={{ m: 0, p: 2 }}>
                 Edit Employee
@@ -140,9 +140,11 @@ const EditReferEmployee = (props: any) => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <TextInput label="Your Full Name" name="fullName" />
+                    <ErrorMessage touched={touched.fullName} errors={errors.fullName} />
                   </Grid>
                   <Grid item xs={6}>
                     <TextInput label="Your Email" name="email" />
+                    <ErrorMessage touched={touched.email} errors={errors.email} />
                   </Grid>
                   <Grid item xs={6}>
                     <TextInput
@@ -150,6 +152,7 @@ const EditReferEmployee = (props: any) => {
                       name="mobileNumber"
                       type="number"
                     />
+                    <ErrorMessage touched={touched.mobileNumber} errors={errors.mobileNumber} />
                   </Grid>
 
                   <Grid item xs={12}>
@@ -157,9 +160,11 @@ const EditReferEmployee = (props: any) => {
                       label="Candidate Full Name"
                       name="candidateFullName"
                     />
+                    <ErrorMessage touched={touched.candidateFullName} errors={errors.candidateFullName} />
                   </Grid>
                   <Grid item xs={6}>
                     <TextInput label="Candidate Email" name="candidateEmail" />
+                    <ErrorMessage touched={touched.candidateEmail} errors={errors.candidateEmail} />
                   </Grid>
                   <Grid item xs={6}>
                     <TextInput
@@ -167,6 +172,7 @@ const EditReferEmployee = (props: any) => {
                       name="candidateMobileNumber"
                       type="number"
                     />
+                    <ErrorMessage touched={touched.candidateMobileNumber} errors={errors.candidateMobileNumber} />
                   </Grid>
 
                   <Grid item xs={12}>
@@ -175,12 +181,14 @@ const EditReferEmployee = (props: any) => {
                       label="Technology"
                       name="technologyIds"
                     ></MultiSelectDropdown>
+                    <ErrorMessage touched={touched.technologyIds} errors={errors.technologyIds} />
                   </Grid>
                   <Grid item xs={12}>
                     <TextInput
                       label="Candidate Experience"
                       name="candidateExperience"
                     />
+                    <ErrorMessage touched={touched.candidateExperience} errors={errors.candidateExperience} />
                   </Grid>
                   <Grid item xs={12}>
                     <UploadFile

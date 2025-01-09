@@ -27,6 +27,7 @@ import {
 import { CandidateHistoryModel } from "../../models/CandidateHistoryModel";
 import { Form, Formik } from "formik";
 import TextInput from "./../../common/Controls/TextInput";
+import ErrorMessage from "./../../common/Controls/ErrorMessage";
 
 const Comments = (props: any) => {
   const { model, setModel, candidateDetailData } = props;
@@ -88,97 +89,100 @@ const Comments = (props: any) => {
         onSubmit={onFormSubmit}
         enableReinitialize
       >
-        <Form id={"candidateHistoryDetail"}>
-          <DialogTitle sx={{ m: 0, p: 2 }}>
-            Candidate {model.ops}
-            <IconButton
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-              onClick={handleModelClose}
-            >
-              {" "}
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent dividers>
-            <Box>
-              <TextInput
-                id="commentsid"
-                label="Comment"
-                name="message"
-                multiline
-                rows={6}
-                style={{ width: "100%" }}
-              />
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<SaveIcon />}
-                type="submit"
-                style={{ marginTop: 16, marginBottom: 16, float: "right" }}
+        {({ touched, errors }) => (
+          <Form id={"candidateHistoryDetail"}>
+            <DialogTitle sx={{ m: 0, p: 2 }}>
+              Candidate {model.ops}
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+                onClick={handleModelClose}
               >
-                Save
-              </Button>
-              <div style={{ width: "100%" }}>
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          <b>Comments</b>
-                        </TableCell>
-                        <TableCell
-                          align="right"
-                          style={{ width: 100, boxSizing: "unset" }}
-                        >
-                          <b>Actions</b>
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {candidateHistoryList.map((row) => (
-                        <TableRow
-                          key={row.id}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.message}
+                {" "}
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent dividers>
+              <Box>
+                <TextInput
+                  id="commentsid"
+                  label="Comment"
+                  name="message"
+                  multiline
+                  rows={6}
+                  style={{ width: "100%" }}
+                />
+                <ErrorMessage touched={touched.message} errors={errors.message} />
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<SaveIcon />}
+                  type="submit"
+                  style={{ marginTop: 16, marginBottom: 16, float: "right" }}
+                >
+                  Save
+                </Button>
+                <div style={{ width: "100%" }}>
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            <b>Comments</b>
                           </TableCell>
-                          <TableCell align="right">
-                            {" "}
-                            <>
-                              <IconButton
-                                onClick={() => handleClickEditOpen(row)}
-                              >
-                                <Edit />
-                              </IconButton>
-                            </>
+                          <TableCell
+                            align="right"
+                            style={{ width: 100, boxSizing: "unset" }}
+                          >
+                            <b>Actions</b>
                           </TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleModelClose}
-            >
-              {" "}
-              Close{" "}
-            </Button>
-          </DialogActions>
-        </Form>
+                      </TableHead>
+                      <TableBody>
+                        {candidateHistoryList.map((row) => (
+                          <TableRow
+                            key={row.id}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.message}
+                            </TableCell>
+                            <TableCell align="right">
+                              {" "}
+                              <>
+                                <IconButton
+                                  onClick={() => handleClickEditOpen(row)}
+                                >
+                                  <Edit />
+                                </IconButton>
+                              </>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleModelClose}
+              >
+                {" "}
+                Close{" "}
+              </Button>
+            </DialogActions>
+          </Form>
+        )}
       </Formik>
       <ToastContainer autoClose={2000} closeOnClick />
     </>

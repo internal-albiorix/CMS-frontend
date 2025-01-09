@@ -1,69 +1,141 @@
-import CloseIcon from "@mui/icons-material/Close";
-import { technologyDataModel } from "./../../models/TechnologyModel";
+import { useEffect, useState } from 'react';
 import {
   Button,
-  IconButton,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Box,
+  Grid,
   Typography,
-} from "@mui/material";
+  Container,
+  Box,
+  Link,
+  Paper,
+} from '@mui/material';
+import { useLocation } from 'react-router-dom';
+import { getCandidateById } from '../../services/CandidateService';
+import Loader from "../../helpers/Loader";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import formatDateTime from '../../helpers/FormatDateTime';
 
-function CandidateDetail(props: any) {
-  const { model, setModel, candidateDetailData } = props;
-  const handleModelClose = () => {
-    setModel({ open: false, ops: "" });
+function CandidateDetail() {
+  const location = useLocation();
+  const { candidateId } = location.state || {};
+
+  const [candidateDetailData, setCandidateDetailData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Fetch candidate data by ID
+  const fetchCandidateData = async () => {
+    if (candidateId) {
+      const numericCandidateId = Number(candidateId); // Ensure the candidateId is a number
+      try {
+        setLoading(true);
+        const { data, success } = await getCandidateById(numericCandidateId);
+
+        if (success) {
+          setCandidateDetailData(data);
+        } else {
+          toast.error("Failed to fetch candidate details. Please try again.");
+        }
+      } catch (error) {
+        toast.error("Error fetching candidate details. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
   };
-  const GetTechnologyName = (params: technologyDataModel[]) => {
-    return params.map((tech: any) => tech.technologyName).join(", ");
-  };
+
+  useEffect(() => {
+    fetchCandidateData();
+  }, [candidateId]);
+
   return (
     <>
-      <DialogTitle sx={{ m: 0, p: 2 }}>
-        Candidate {model.ops}
-        <IconButton
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-          onClick={handleModelClose}
-        >
-          {" "}
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers>
-        <Box>
-          <Typography variant="subtitle1" gutterBottom>
-            Full Name: {candidateDetailData.fullName}
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Email : {candidateDetailData.email}
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Mobile : {candidateDetailData.mobileNumber}
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Technology :{" "}
-            {GetTechnologyName(candidateDetailData.technologyModel)}
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Experience : {candidateDetailData.experience}
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Status : {candidateDetailData.statusModel.statusName}
-          </Typography>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="inherit" onClick={handleModelClose}>
-          {" "}
-          Close{" "}
-        </Button>
-      </DialogActions>
+      {loading && <Loader />} {/* Display loader when loading */}
+      {!loading && (
+          <Paper elevation={3} sx={{ padding: 4, marginTop: 4 }}>
+            <Grid container spacing={4} alignItems="flex-start">
+              {/* Title */}
+              <Grid item xs={12}>
+                <Typography variant="h4" component="h1" gutterBottom>
+                  Candidate Details
+                </Typography>
+              </Grid>
+
+              {/* Candidate Details */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ marginBottom: 2 }}>
+                  <Typography variant="h5">{candidateDetailData?.fullName}</Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Email:</strong> {candidateDetailData?.email || 'N/A'}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Mobile:</strong> {candidateDetailData?.mobileNumber || 'N/A'}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Technologies:</strong>{' '}
+                    { candidateDetailData?.technologyModel.map((tech: { technologyName: any; }) => tech.technologyName).join(', ') || 'N/A'}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Experience:</strong> {candidateDetailData?.experience || 'N/A'} years
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* Additional Candidate Info */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ marginBottom: 2 }}>
+                  <Typography variant="subtitle1">
+                    <strong>Status:</strong> {candidateDetailData?.statusModel?.statusName || 'N/A'}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Interview Link:</strong>{' '}
+                    {candidateDetailData?.candidateInterviewSchedule[0]?.googleMeetLink ? (
+                      <Link
+                        href={candidateDetailData?.candidateInterviewSchedule[0]?.googleMeetLink}
+                        target="_blank"
+                        rel="noopener"
+                        variant="body1"
+                      >
+                        Join Meeting
+                      </Link>
+                    ) : (
+                      'N/A'
+                    )}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Interview Date:</strong>{' '}
+                    {candidateDetailData?.candidateInterviewSchedule[0] ? (formatDateTime(candidateDetailData?.candidateInterviewSchedule[0]?.startDate) || 'N/A') : 'N/A'}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Resume:</strong>{' '}
+                    {candidateDetailData?.driveLink ? (
+                      <Link
+                        href={candidateDetailData?.driveLink}
+                        target="_blank"
+                        rel="noopener"
+                        variant="body1"
+                      >
+                        View Resume
+                      </Link>
+                    ) : (
+                      'N/A'
+                    )}
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* Back Button */}
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => window.history.back()}
+                >
+                  Go Back
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
+      )}
     </>
   );
 }

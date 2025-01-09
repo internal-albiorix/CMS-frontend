@@ -11,6 +11,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import SelectDropdown from "../../../common/Controls/SelectDropdown";
 import TextInput from "../../../common/Controls/TextInput";
+import ErrorMessage from "../../../common/Controls/ErrorMessage";
 import { insertUpdateEmailTemplate,deleteEmailTemplate } from "../../../services/EmailTemplateService";
 
 import { EmailTemplateModel } from "../../../models/EmailTemplateModel";
@@ -52,7 +53,7 @@ const EmailTemplateOperations = (props: any) => {
       onSubmit={onFormSubmit}
       enableReinitialize
     >
-      {({ setFieldValue }) => (
+      {({ setFieldValue, touched, errors }) => (
         <Form id={`${model.ops}EmailTemplate`}>
           <DialogTitle sx={{ m: 0, p: 2 }}>
             {model.ops} Email Template
@@ -74,6 +75,7 @@ const EmailTemplateOperations = (props: any) => {
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextInput label="Template Name" name="templateName" />
+                  <ErrorMessage touched={touched.templateName} errors={errors.templateName} />
                 </Grid>
                 <Grid item xs={12}>
                 <SelectDropdown
@@ -82,6 +84,7 @@ const EmailTemplateOperations = (props: any) => {
                   name="templateType"
                   valueField="value"
                 />
+                <ErrorMessage touched={touched.templateType} errors={errors.templateType} />
               </Grid>
                 <Grid item xs={12}>
                   <Typography variant="h6" component="label" gutterBottom>

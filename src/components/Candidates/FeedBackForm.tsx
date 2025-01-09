@@ -22,6 +22,7 @@ import {
 import { getSecureLocalStorage } from "../../helpers/SecureLocalStorage";
 import { feedBackModel } from "../../models/FeedBackModel";
 import { insertFeedBack } from "../../services/FeedBackService";
+import ErrorMessage from "../../common/Controls/ErrorMessage";
 
 const FeedBackForm: React.FC = () => {
   const locationData = useLocation();
@@ -83,9 +84,10 @@ const FeedBackForm: React.FC = () => {
   };
   const validationSchema = yup.object().shape({
     interviewRoundId: yup.string().required("Interview Round required"),
-    technologyIds: yup.array().min(1).required("Minimum 1 technology required"),
+    technologyIds: yup.array().min(1, "Minimum 1 technology required").required("At least one technology is required"),
     comments: yup.string().required("Comments name required"),
   });
+  
   const navigate = useNavigate();
   const onFormSubmit = async (values: feedBackModel) => {
     values.candidateId = locationData?.state?.model?.id;
@@ -123,7 +125,7 @@ const FeedBackForm: React.FC = () => {
               onSubmit={onFormSubmit}
               enableReinitialize
             >
-              {({ resetForm }) => (
+              {({ resetForm, touched, errors }) => (
                 <Form id="feedbackform">
                   <Grid container spacing={2} sx={{ mb: 2 }}>
                     <Grid item xs={12}>
@@ -136,6 +138,7 @@ const FeedBackForm: React.FC = () => {
                         }).format(new Date())}
                         name="todayDate"
                       />
+                      <ErrorMessage touched={touched.todayDate} errors={errors.todayDate} />
                     </Grid>
                     <Grid item xs={12}>
                       <TextInput
@@ -143,6 +146,7 @@ const FeedBackForm: React.FC = () => {
                         value={getSecureLocalStorage("fullname")}
                         name="interviewerFullName"
                       />
+                      <ErrorMessage touched={touched.interviewerFullName} errors={errors.interviewerFullName} />
                     </Grid>
                     <Grid item xs={12}>
                       <TextInput
@@ -150,6 +154,7 @@ const FeedBackForm: React.FC = () => {
                         value={locationData?.state?.model?.fullName}
                         name="candidateFullName"
                       />
+                      <ErrorMessage touched={touched.candidateFullName} errors={errors.candidateFullName} />
                     </Grid>
                     <Grid item xs={12}>
                       <TextInput
@@ -157,6 +162,7 @@ const FeedBackForm: React.FC = () => {
                         name="experience"
                         value={locationData?.state?.model?.experience}
                       />
+                      <ErrorMessage touched={touched.experience} errors={errors.experience} />
                     </Grid>
                     <Grid item xs={12}>
                       <MultiSelectDropdown
@@ -165,6 +171,7 @@ const FeedBackForm: React.FC = () => {
                         name="technologyIds"
                         valueField="value"
                       />
+                      <ErrorMessage touched={touched.technologyIds} errors={errors.technologyIds} />
                     </Grid>
                     <Grid item xs={12}>
                       <SelectDropdown
@@ -173,6 +180,7 @@ const FeedBackForm: React.FC = () => {
                         name="interviewRoundId"
                         valueField="value"
                       />
+                      <ErrorMessage touched={touched.interviewRoundId} errors={errors.interviewRoundId} />
                     </Grid>
                     <Grid item xs={12}>
                       <SelectDropdown
@@ -217,6 +225,7 @@ const FeedBackForm: React.FC = () => {
                         rows={6}
                         style={{ width: "100%" }}
                       />
+                      <ErrorMessage touched={touched.comments} errors={errors.comments} />
                     </Grid>
                   </Grid>
                   <Grid container sx={{ mb: 2 }} spacing={1}>

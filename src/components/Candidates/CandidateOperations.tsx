@@ -4,6 +4,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextInput from "../../common/Controls/TextInput";
 import MultiSelectDropdown from "../../common/Controls/MultiSelectDropdown";
+import ErrorMessage from "../../common/Controls/ErrorMessage";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
 import {
   Button,
@@ -13,20 +15,18 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Input,
 } from "@mui/material";
-import { Form, Formik } from "formik";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   deleteCandidate,
   insertUpdateCandidate,
 } from "../../services/CandidateService";
-import { candidateDataModel } from "../../models/CandidateModel";
 import SelectDropdown from "./../../common/Controls/SelectDropdown";
 import UploadFile from "../../common/Controls/UploadFile";
 
 function CandidateOperations(props: any) {
-  debugger;
   const {
     model,
     initialValues,
@@ -45,15 +45,18 @@ function CandidateOperations(props: any) {
       mobileNumber: "",
       technologyIds: [],
       experience: "",
-      resumeFile: "",
+      resumeFile: ""
     });
   };
   const [fileName, setFileName] = useState("");
   const validationSchema = yup.object().shape({
-    mobileNumber: yup.string().max(30).required("Mobile number name required"),
+    mobileNumber: yup
+      .string()
+      .required("Mobile number required")
+      .matches(/^[0-9]+$/, "Invalid Mobile Number"),
     email: yup.string().max(40).required("Email required"),
     fullName: yup.string().max(30).required("Candidate name required"),
-    technologyIds: yup.array().min(1).required("Minimum 1 technology required"),
+    technologyIds: yup.array().min(1, "Minimum 1 technology required"),
     experience: yup.string().max(30).required("Candidate experience required"),
     resumeFile: yup.mixed().required("Resume is Required"),
   });
@@ -82,7 +85,7 @@ function CandidateOperations(props: any) {
       await getcandidateData();
       handleModelClose();
       toast.success(res.message);
-    } else toast.error("Something went wrong!!!");
+    } else toast.error(res.message);
   };
 
   return (
@@ -92,7 +95,7 @@ function CandidateOperations(props: any) {
       onSubmit={onFormSubmit}
       enableReinitialize
     >
-      {({ setFieldValue }) => (
+      {({ setFieldValue, touched, errors }) => (
         <Form id={`${model.ops}candidate`}>
           <DialogTitle sx={{ m: 0, p: 2 }}>
             {model.ops} Candidate
@@ -115,12 +118,15 @@ function CandidateOperations(props: any) {
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextInput label="Full Name" name="fullName" />
+                  <ErrorMessage touched={touched.fullName} errors={errors.fullName} />
                 </Grid>
                 <Grid item xs={12}>
                   <TextInput label="Email" name="email" />
+                  <ErrorMessage touched={touched.email} errors={errors.email} />
                 </Grid>
                 <Grid item xs={12}>
                   <TextInput label="Mobile number" name="mobileNumber" />
+                  <ErrorMessage touched={touched.mobileNumber} errors={errors.mobileNumber} />
                 </Grid>
                 <Grid item xs={12}>
                   <MultiSelectDropdown
@@ -129,9 +135,11 @@ function CandidateOperations(props: any) {
                     name="technologyIds"
                     valueField="value"
                   />
+                  <ErrorMessage touched={touched.technologyIds} errors={errors.technologyIds} />
                 </Grid>
                 <Grid item xs={12}>
                   <TextInput label="Experience" name="experience" />
+                  <ErrorMessage touched={touched.experience} errors={errors.experience} />
                 </Grid>
 
                 {model.ops === "Update" ? (
@@ -142,17 +150,19 @@ function CandidateOperations(props: any) {
                       name="statusId"
                       valueField="value"
                     />
+                    <ErrorMessage touched={touched.statusId} errors={errors.statusId} />
                   </Grid>
                 ) : (
                   ""
                 )}
                 <Grid item xs={12}>
-                  <UploadFile
-                    name="resumeFile"
-                    setFieldValue={setFieldValue}
-                    setFileName={setFileName}
-                    fileName={fileName}
-                  ></UploadFile>
+                    <UploadFile
+                      name="resumeFile"
+                      setFieldValue={setFieldValue}
+                      setFileName={setFileName}
+                      fileName={fileName}
+                    ></UploadFile>
+                  <ErrorMessage touched={touched.resumeFile} errors={errors.resumeFile} />
                 </Grid>
               </Grid>
             ) : (

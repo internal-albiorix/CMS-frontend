@@ -119,10 +119,6 @@ const Inquiries: React.FC = () => {
     setModel({ open: true, ops: "Update" });
   };
 
-  const handleClickDetailOpen = (rowData: inquiriesDataModel) => {
-    setdetailInquiriesData(rowData);
-    setDetailModel({ open: true, ops: "Detail" });
-  };
   const handleClickDeleteOpen = (rowData: inquiriesDataModel) => {
     setInquiriesData(rowData);
     setModel({ open: true, ops: "Delete" });

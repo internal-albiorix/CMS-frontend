@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { rolesdropItems, statusdropItems } from "../../helpers/CommonData";
 import { getSecureLocalStorage } from "../../helpers/SecureLocalStorage";
+import ErrorMessage from "./../../common/Controls/ErrorMessage";
 
 function UsersOperations(props: any) {
   const {
@@ -78,7 +79,7 @@ function UsersOperations(props: any) {
       .required("Mobile No. is required"),
     email: yup.string().email().required("Email is required"),
     designationId: yup.string().required("Designation is required"),
-    technologyIds: yup.array().min(1).required("Minimum 1 technology required"),
+    technologyIds: yup.array().min(1, "Minimum 1 technology required"),
     role: yup.number().oneOf(
       rolesdropItems.map((item) => item.value),
       "Please select a role"
@@ -98,7 +99,7 @@ function UsersOperations(props: any) {
       .oneOf([yup.ref("password")], "Passwords must match")
       .required("Confirm Password is required"),
   });
-debugger;
+  debugger;
   return (
     <Formik
       initialValues={initialValues}
@@ -106,122 +107,133 @@ debugger;
       onSubmit={onFormSubmit}
       enableReinitialize
     >
-      <Form id={`${model.ops}Users`}>
-        <DialogTitle sx={{ m: 0, p: 2 }}>
-          {model.ops} Users
-          <IconButton
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-            onClick={handleModelClose}
-          >
-            {" "}
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+      {({ touched, errors }) => (
+        <Form id={`${model.ops}Users`}>
+          <DialogTitle sx={{ m: 0, p: 2 }}>
+            {model.ops} Users
+            <IconButton
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+              onClick={handleModelClose}
+            >
+              {" "}
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
 
-        <DialogContent dividers>
-          {model.ops !== "Delete" ? (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextInput label="Full Name" name="fullName" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextInput label="Mobile No." name="mobileNumber" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextInput label="Email" name="email" />
-              </Grid>
-              <Grid item xs={12}>
-                <SelectDropdown
-                  items={designationData}
-                  label="Designation"
-                  name="designationId"
-                  valueField="value"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <MultiSelectDropdown
-                  items={technologyData}
-                  label="Technology"
-                  name="technologyIds"
-                  valueField="value"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <SelectDropdown
-                  items={GetRoleMenuitems(rolesdropItems)}
-                  label="Role"
-                  name="role"
-                  valueField="value"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <SelectDropdown
-                  items={statusdropItems}
-                  label="Status"
-                  name="status"
-                  valueField="value"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextInput
-                  label="Password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
+          <DialogContent dividers>
+            {model.ops !== "Delete" ? (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextInput label="Full Name" name="fullName" />
+                  <ErrorMessage touched={touched.fullName} errors={errors.fullName} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextInput label="Mobile No." name="mobileNumber" />
+                  <ErrorMessage touched={touched.mobileNumber} errors={errors.mobileNumber} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextInput label="Email" name="email" />
+                  <ErrorMessage touched={touched.email} errors={errors.email} />
+                </Grid>
+                <Grid item xs={12}>
+                  <SelectDropdown
+                    items={designationData}
+                    label="Designation"
+                    name="designationId"
+                    valueField="value"
+                  />
+                  <ErrorMessage touched={touched.designationId} errors={errors.designationId} />
+                </Grid>
+                <Grid item xs={12}>
+                  <MultiSelectDropdown
+                    items={technologyData}
+                    label="Technology"
+                    name="technologyIds"
+                    valueField="value"
+                  />
+                  <ErrorMessage touched={touched.technologyIds} errors={errors.technologyIds} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <SelectDropdown
+                    items={GetRoleMenuitems(rolesdropItems)}
+                    label="Role"
+                    name="role"
+                    valueField="value"
+                  />
+                  <ErrorMessage touched={touched.role} errors={errors.role} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <SelectDropdown
+                    items={statusdropItems}
+                    label="Status"
+                    name="status"
+                    valueField="value"
+                  />
+                  <ErrorMessage touched={touched.status} errors={errors.status} />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextInput
+                    label="Password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                  <ErrorMessage touched={touched.password} errors={errors.password} />
+                </Grid>
 
-              <Grid item xs={12}>
-                <TextInput
-                  label="Confirm Password"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                />
+                <Grid item xs={12}>
+                  <TextInput
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                  />
+                  <ErrorMessage touched={touched.confirmPassword} errors={errors.confirmPassword} />
+                </Grid>
               </Grid>
-            </Grid>
-          ) : (
-            <Typography gutterBottom>
-              Are you sure want to delete this record?
-            </Typography>
-          )}
-        </DialogContent>
+            ) : (
+              <Typography gutterBottom>
+                Are you sure want to delete this record?
+              </Typography>
+            )}
+          </DialogContent>
 
-        <DialogActions>
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={handleModelClose}
-          >
-            {" "}
-            Cancel{" "}
-          </Button>
-          {model.ops !== "Delete" ? (
+          <DialogActions>
             <Button
               variant="contained"
-              color="error"
-              startIcon={<SaveIcon />}
-              type="submit"
+              color="inherit"
+              onClick={handleModelClose}
             >
-              {model.ops}
+              {" "}
+              Cancel{" "}
             </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteIcon />}
-              type="submit"
-            >
-              {model.ops}
-            </Button>
-          )}
-        </DialogActions>
-      </Form>
+            {model.ops !== "Delete" ? (
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<SaveIcon />}
+                type="submit"
+              >
+                {model.ops}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<DeleteIcon />}
+                type="submit"
+              >
+                {model.ops}
+              </Button>
+            )}
+          </DialogActions>
+        </Form>
+      )}
     </Formik>
   );
 }

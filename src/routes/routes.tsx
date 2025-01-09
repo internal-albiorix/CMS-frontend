@@ -28,6 +28,9 @@ const ScheduleInterview = LazyLoader(
 const FeedBackForm = LazyLoader(
   lazy(() => import("../components/Candidates/FeedBackForm"))
 );
+const CandidateDetail = LazyLoader(
+  lazy(() => import("../components/Candidates/CandidateDetail"))
+);
 const Users = LazyLoader(lazy(() => import("../components/Users/Users")));
 const CurrentOpenings = LazyLoader(
   lazy(() => import("../components/CurrentOpenings/CurrentOpenings"))
@@ -141,6 +144,14 @@ const routes: RouteObject[] = [
         element: (
           <ProtectedRoute Roles="1,2,3">
             <FeedBackForm />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "candidateDetail",
+        element: (
+          <ProtectedRoute Roles="1,2,3">
+            <CandidateDetail />
           </ProtectedRoute>
         ),
       },

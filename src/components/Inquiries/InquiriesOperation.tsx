@@ -21,13 +21,12 @@ import {
   deleteInquiries,
   insertUpdateInquiries,
 } from "../../services/InquiriesService";
-
-import SelectDropdown from "./../../common/Controls/SelectDropdown";
 import UploadFile from "../../common/Controls/UploadFile";
 import { insertUpdateCandidate } from "../../services/CandidateService";
+import ErrorMessage from "./../../common/Controls/ErrorMessage";
+
 
 function InquiriesOperations(props: any) {
-  debugger;
   const {
     model,
     initialValues,
@@ -35,7 +34,7 @@ function InquiriesOperations(props: any) {
     setSelectedinquiriesData,
     getinquiriesData,
     technologyData,
-    
+
   } = props;
   const handleModelClose = () => {
     setModel({ open: false, ops: "" });
@@ -51,10 +50,13 @@ function InquiriesOperations(props: any) {
   };
   const [fileName, setFileName] = useState("");
   const validationSchema = yup.object().shape({
-    mobileNumber: yup.string().max(30).required("Mobile number name required"),
+    mobileNumber: yup
+          .string()
+          .required("Mobile number required")
+          .matches(/^[0-9]+$/, "Invalid Mobile Number"),
     email: yup.string().max(30).required("Email required"),
     fullName: yup.string().max(30).required("Name required"),
-    technologyIds: yup.array().min(1).required("Minimum 1 technology required"),
+    technologyIds: yup.array().min(1, "Minimum 1 technology required").required("At least one technology is required"),
     experience: yup.string().max(30).required("Experience required"),
     resumeFile: yup.mixed().required("Resume is Required"),
   });
@@ -75,20 +77,20 @@ function InquiriesOperations(props: any) {
       formData.append("resume", values?.resumeFile?.name);
       res = await insertUpdateInquiries(formData);
     }
-    else if(model.ops === "Convert Candidate"){
-    let formData = new FormData();
-    formData.append("id", "0");
-    formData.append("fullName", values.fullName);
-    formData.append("email", values.email);
-    formData.append("mobileNumber", values.mobileNumber);
-    formData.append("statusId","0");
-    values.technologyIds.forEach((techId: string) =>
-      formData.append("technologyIds[]", techId)
-    );
-    formData.append("experience", values.experience);
-    formData.append("resumeFile", "");
-    formData.append("resume", values.resumeFile);
-     res = await insertUpdateCandidate(formData);
+    else if (model.ops === "Convert Candidate") {
+      let formData = new FormData();
+      formData.append("id", "0");
+      formData.append("fullName", values.fullName);
+      formData.append("email", values.email);
+      formData.append("mobileNumber", values.mobileNumber);
+      formData.append("statusId", "0");
+      values.technologyIds.forEach((techId: string) =>
+        formData.append("technologyIds[]", techId)
+      );
+      formData.append("experience", values.experience);
+      formData.append("resumeFile", "");
+      formData.append("resume", values.resumeFile);
+      res = await insertUpdateCandidate(formData);
     } else {
       res = await deleteInquiries(values.id);
     }
@@ -106,7 +108,7 @@ function InquiriesOperations(props: any) {
       onSubmit={onFormSubmit}
       enableReinitialize
     >
-      {({ setFieldValue }) => (
+      {({ setFieldValue, touched, errors }) => (
         <Form id={`${model.ops}inquiries`}>
           <DialogTitle sx={{ m: 0, p: 2 }}>
             {model.ops} Inquiries
@@ -125,47 +127,53 @@ function InquiriesOperations(props: any) {
           </DialogTitle>
 
           <DialogContent dividers>
-          {model.ops === "Convert Candidate" ? (
+            {model.ops === "Convert Candidate" ? (
               <Typography>
                 Are you sure you want to convert this inquiry to a candidate?
               </Typography>
-            ) : 
-            model.ops !== "Delete" ? (
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextInput label="Full Name" name="fullName" />
+            ) :
+              model.ops !== "Delete" ? (
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextInput label="Full Name" name="fullName" />
+                    <ErrorMessage touched={touched.fullName} errors={errors.fullName} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInput label="Email" name="email" />
+                    <ErrorMessage touched={touched.email} errors={errors.email} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInput label="Mobile number" name="mobileNumber" />
+                    <ErrorMessage touched={touched.mobileNumber} errors={errors.mobileNumber} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <MultiSelectDropdown
+                      items={technologyData}
+                      label="Technology"
+                      name="technologyIds"
+                      valueField="value"
+                    />
+                    <ErrorMessage touched={touched.technologyIds} errors={errors.technologyIds} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInput label="Experience" name="experience" />
+                    <ErrorMessage touched={touched.experience} errors={errors.experience} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <UploadFile
+                      name="resumeFile"
+                      setFieldValue={setFieldValue}
+                      setFileName={setFileName}
+                      fileName={fileName}
+                    ></UploadFile>
+                    <ErrorMessage touched={touched.resumeFile} errors={errors.resumeFile} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextInput label="Email" name="email" />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextInput label="Mobile number" name="mobileNumber" />
-                </Grid>
-                <Grid item xs={12}>
-                  <MultiSelectDropdown
-                    items={technologyData}
-                    label="Technology"
-                    name="technologyIds"
-                    valueField="value"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextInput label="Experience" name="experience" />
-                </Grid>
-                <Grid item xs={12}>
-                  <UploadFile
-                    name="resumeFile"
-                    setFieldValue={setFieldValue}
-                    setFileName={setFileName}
-                    fileName={fileName}
-                  ></UploadFile>
-                </Grid>
-              </Grid>
-            ) : (
-              <Typography gutterBottom>
-                Are you sure want to delete this record?
-              </Typography>
-            )}
+              ) : (
+                <Typography gutterBottom>
+                  Are you sure want to delete this record?
+                </Typography>
+              )}
           </DialogContent>
 
           <DialogActions>

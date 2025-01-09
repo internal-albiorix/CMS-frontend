@@ -29,6 +29,7 @@ import {
 import { technologyDataModel } from "../../../models/TechnologyModel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorMessage from "../../../common/Controls/ErrorMessage";
 
 const Technology: React.FC = () => {
   const [technologyData, settechnologyData] = useState<technologyDataModel[]>(
@@ -151,8 +152,9 @@ const Technology: React.FC = () => {
 
     const onFormSubmit = async (values: technologyDataModel) => {
       let res;
-      if (model.ops === "Save" || model.ops === "Update")
+      if (model.ops === "Save" || model.ops === "Update"){
         res = await insertUpdateTechnology(values);
+      }
       else res = await deleteTechnology(values.id);
 
       if (res.success) {
@@ -169,73 +171,76 @@ const Technology: React.FC = () => {
         onSubmit={onFormSubmit}
         enableReinitialize
       >
-        <Form id={`${model.ops}technology`}>
-          <DialogTitle sx={{ m: 0, p: 2 }}>
-            {model.ops} Technology
-            <IconButton
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-              onClick={handleModelClose}
-            >
-              {" "}
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
+        {({ touched, errors }) => (
+          <Form id={`${model.ops}technology`}>
+            <DialogTitle sx={{ m: 0, p: 2 }}>
+              {model.ops} Technology
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+                onClick={handleModelClose}
+              >
+                {" "}
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
 
-          <DialogContent dividers>
-            {model.ops !== "Delete" ? (
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextInput label="Technology Name" name="technologyName" />
+            <DialogContent dividers>
+              {model.ops !== "Delete" ? (
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextInput label="Technology Name" name="technologyName" />
+                    <ErrorMessage touched={touched.technologyName} errors={errors.technologyName} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInput
+                      label="Technology Description"
+                      name="technologyDescription"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextInput
-                    label="Technology Description"
-                    name="technologyDescription"
-                  />
-                </Grid>
-              </Grid>
-            ) : (
-              <Typography gutterBottom>
-                Are you sure want to delete this record?
-              </Typography>
-            )}
-          </DialogContent>
+              ) : (
+                <Typography gutterBottom>
+                  Are you sure want to delete this record?
+                </Typography>
+              )}
+            </DialogContent>
 
-          <DialogActions>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleModelClose}
-            >
-              {" "}
-              Cancel{" "}
-            </Button>
-            {model.ops !== "Delete" ? (
+            <DialogActions>
               <Button
                 variant="contained"
-                color="error"
-                startIcon={<SaveIcon />}
-                type="submit"
+                color="inherit"
+                onClick={handleModelClose}
               >
-                {model.ops}
+                {" "}
+                Cancel{" "}
               </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<DeleteIcon />}
-                type="submit"
-              >
-                {model.ops}
-              </Button>
-            )}
-          </DialogActions>
-        </Form>
+              {model.ops !== "Delete" ? (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<SaveIcon />}
+                  type="submit"
+                >
+                  {model.ops}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  type="submit"
+                >
+                  {model.ops}
+                </Button>
+              )}
+            </DialogActions>
+          </Form>
+        )}
       </Formik>
     );
   };

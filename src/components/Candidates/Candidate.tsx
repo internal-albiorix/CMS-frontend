@@ -18,7 +18,7 @@ import { getAllTechnology } from "../../services/TechnologyService";
 import { getAllStatus } from "../../services/StatusService";
 import { DropdownModel } from "../../models/DropdownModel";
 import { getSecureLocalStorage } from "../../helpers/SecureLocalStorage";
-import CandidateDetail from "./CandidateDetail";
+// import CandidateDetail from "./CandidateDetail";
 import CommentIcon from "@mui/icons-material/Comment";
 import MenuActions from "./MenuActions";
 import MenuItem from "@mui/material/MenuItem";
@@ -175,17 +175,21 @@ const Candidate: React.FC = () => {
     setCandidateData(rowData);
     setModel({ open: true, ops: "Update" });
   };
-  const handleClickDetailOpen = (rowData: candidateDataModel) => {
-    setdetailCandidateData(rowData);
-    setDetailModel({ open: true, ops: "Detail" });
-  };
+  // const handleClickDetailOpen = (rowData: candidateDataModel) => {
+  //   setdetailCandidateData(rowData);
+  //   setDetailModel({ open: true, ops: "Detail" });
+  // };
   const navigate = useNavigate();
   const handleClickFeedbackForm = (rowData: candidateDataModel) => {
     navigate("/feedbackForm", {
       state: { model: rowData },
     });
   };
-
+  const handleClickCandidateDetail = (rowData: candidateDataModel) => {
+    navigate("/candidateDetail", {
+      state: { candidateId: rowData.id }
+    });
+  };
   const handleClickCommentsOpen = (rowData: candidateDataModel) => {
     setdetailCandidateData(rowData);
     setcommentsModel({ open: true, ops: "Comments" });
@@ -206,13 +210,13 @@ const Candidate: React.FC = () => {
     setdetailCandidateData(rowData);
     settimelineModel({ open: true, ops: "TimeLine" });
   };
-  const handleClickRejectInterviewSchedule = async(rowData:candidateDataModel)=>{
+  const handleClickRejectInterviewSchedule = async (rowData: candidateDataModel) => {
     let res = await rejectInterviewSchedule(
       rowData.id
     );
     if (res) {
-     toast.success(res.message)
-    } 
+      toast.success(res.message)
+    }
   };
   const allcolumns: GridColDef[] = [
     {
@@ -228,7 +232,8 @@ const Candidate: React.FC = () => {
           <Link
             component="button"
             variant="body2"
-            onClick={() => openCandidateTimeLine(params.row)}
+            // onClick={() => openCandidateTimeLine(params.row)}
+            onClick={() => handleClickCandidateDetail(params.row)}
           >
             {params.row.fullName}
           </Link>
@@ -302,7 +307,7 @@ const Candidate: React.FC = () => {
         return (
           <>
             <MenuActions>
-              <MenuItem onClick={() => handleClickDetailOpen(params.row)}>
+              <MenuItem onClick={() => handleClickCandidateDetail(params.row)}>
                 <ListItemIcon>
                   <InfoIcon fontSize="small" />
                 </ListItemIcon>
@@ -371,7 +376,7 @@ const Candidate: React.FC = () => {
       },
     },
   ];
-  const interviewerColumn : GridColDef = {
+  const interviewerColumn: GridColDef = {
     field: "interviewerName",
     headerName: "Interviewer",
     headerClassName: "dataGridHeader",
@@ -379,16 +384,16 @@ const Candidate: React.FC = () => {
     align: "left",
     headerAlign: "left",
     minWidth: 200,
-    renderCell: (params:any) => {
+    renderCell: (params: any) => {
       if (!params.row.interviewerName) {
         return "Not Scheduled";
       }
-  
+
       const isReject = params.row.isReject;
       const interviewerStyle = {
         color: isReject ? 'red' : 'green',
       };
-  
+
       return (
         <span style={interviewerStyle}>
           {params.row.interviewerName}
@@ -437,13 +442,13 @@ const Candidate: React.FC = () => {
             />
           </DialogModal>
 
-          <DialogModal modelOps={detailmodel} setModelOps={setDetailModel}>
+          {/* <DialogModal modelOps={detailmodel} setModelOps={setDetailModel}>
             <CandidateDetail
               model={detailmodel}
               setModel={setDetailModel}
               candidateDetailData={detailCandidateData}
             />
-          </DialogModal>
+          </DialogModal> */}
           <DialogModal
             modelOps={commentsmodel}
             setModelOps={setcommentsModel}

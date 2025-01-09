@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextInput from "../../../common/Controls/TextInput";
+import ErrorMessage from "../../../common/Controls/ErrorMessage";
 import * as yup from "yup";
 import {
   Button,
@@ -66,73 +67,77 @@ function designationOperations(props: any) {
       onSubmit={onFormSubmit}
       enableReinitialize
     >
-      <Form id={`${model.ops}Designation`}>
-        <DialogTitle sx={{ m: 0, p: 2 }}>
-          {model.ops} Designation
-          <IconButton
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-            onClick={handleModelClose}
-          >
-            {" "}
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+      {({ touched, errors }) => (
+        <Form id={`${model.ops}Designation`}>
+          <DialogTitle sx={{ m: 0, p: 2 }}>
+            {model.ops} Designation
+            <IconButton
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+              onClick={handleModelClose}
+            >
+              {" "}
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
 
-        <DialogContent dividers>
-          {model.ops !== "Delete" ? (
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextInput label="Designation Name" name="designationName" />
+          <DialogContent dividers>
+            {model.ops !== "Delete" ? (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextInput label="Designation Name" name="designationName" />
+                  <ErrorMessage touched={touched.designationName} errors={errors.designationName} />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextInput
+                    label="Designation Description"
+                    name="designationDescription"
+                  />
+                  <ErrorMessage touched={touched.designationDescription} errors={errors.designationDescription} />
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextInput
-                  label="Designation Description"
-                  name="designationDescription"
-                />
-              </Grid>
-            </Grid>
-          ) : (
-            <Typography gutterBottom>
-              Are you sure want to delete this record?
-            </Typography>
-          )}
-        </DialogContent>
+            ) : (
+              <Typography gutterBottom>
+                Are you sure want to delete this record?
+              </Typography>
+            )}
+          </DialogContent>
 
-        <DialogActions>
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={handleModelClose}
-          >
-            {" "}
-            Cancel{" "}
-          </Button>
-          {model.ops !== "Delete" ? (
+          <DialogActions>
             <Button
               variant="contained"
-              color="error"
-              startIcon={<SaveIcon />}
-              type="submit"
+              color="inherit"
+              onClick={handleModelClose}
             >
-              {model.ops}
+              {" "}
+              Cancel{" "}
             </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteIcon />}
-              type="submit"
-            >
-              {model.ops}
-            </Button>
-          )}
-        </DialogActions>
-      </Form>
+            {model.ops !== "Delete" ? (
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<SaveIcon />}
+                type="submit"
+              >
+                {model.ops}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<DeleteIcon />}
+                type="submit"
+              >
+                {model.ops}
+              </Button>
+            )}
+          </DialogActions>
+        </Form>
+      )}
     </Formik>
   );
 }

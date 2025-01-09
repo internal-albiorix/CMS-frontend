@@ -12,6 +12,7 @@ import { ChangePasswordModel } from "../../models/ChangePasswordModel";
 import { changedPassword } from "../../services/UserService";
 import * as yup from "yup";
 import { getSecureLocalStorage } from "../../helpers/SecureLocalStorage";
+import ErrorMessage from "../../common/Controls/ErrorMessage";
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
@@ -76,46 +77,51 @@ const Profile: React.FC = () => {
               onSubmit={onFormSubmit}
               enableReinitialize
             >
-              <Form id="feedbackform">
-                <Grid container spacing={2} sx={{ mb: 2 }}>
-                  <Grid item xs={12}>
-                    <TextInput
-                      label="Current Password"
-                      name="oldPassword"
-                      type="password"
-                    />
+              {({ touched, errors }) => (
+                <Form id="feedbackform">
+                  <Grid container spacing={2} sx={{ mb: 2 }}>
+                    <Grid item xs={12}>
+                      <TextInput
+                        label="Current Password"
+                        name="oldPassword"
+                        type="password"
+                      />
+                      <ErrorMessage touched={touched.oldPassword} errors={errors.oldPassword} />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextInput
+                        label="New Password"
+                        name="password"
+                        type="password"
+                      />
+                      <ErrorMessage touched={touched.password} errors={errors.password} />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextInput
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        type="password"
+                      />
+                      <ErrorMessage touched={touched.confirmPassword} errors={errors.confirmPassword} />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextInput
-                      label="New Password"
-                      name="password"
-                      type="password"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextInput
-                      label="Confirm Password"
-                      name="confirmPassword"
-                      type="password"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container sx={{ mb: 2 }} spacing={1}>
-                  <Grid item xs={9.6}></Grid>
+                  <Grid container sx={{ mb: 2 }} spacing={1}>
+                    <Grid item xs={9.6}></Grid>
 
-                  <Grid item xs={2}>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      startIcon={<SaveIcon />}
-                      type="submit"
-                    >
-                      Save
-                    </Button>
+                    <Grid item xs={2}>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<SaveIcon />}
+                        type="submit"
+                      >
+                        Save
+                      </Button>
+                    </Grid>
+                    <Grid item xs={3}></Grid>
                   </Grid>
-                  <Grid item xs={3}></Grid>
-                </Grid>
-              </Form>
+                </Form>
+              )}
             </Formik>
           </Box>
           <ToastContainer autoClose={2000} closeOnClick />

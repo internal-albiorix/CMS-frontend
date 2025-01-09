@@ -29,6 +29,7 @@ import {
 import { InterviewRoundDataModel } from "../../../models/InterviewRoundModel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorMessage from "../../../common/Controls/ErrorMessage";
 
 const InterviewRound: React.FC = () => {
   const [InterviewRoundData, setInterviewRoundData] = useState<
@@ -173,76 +174,79 @@ const InterviewRound: React.FC = () => {
         onSubmit={onFormSubmit}
         enableReinitialize
       >
-        <Form id={`${model.ops}InterviewRound`}>
-          <DialogTitle sx={{ m: 0, p: 2 }}>
-            {model.ops} Interview Round
-            <IconButton
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-              onClick={handleModelClose}
-            >
-              {" "}
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
+        {({ touched, errors }) => (
+          <Form id={`${model.ops}InterviewRound`}>
+            <DialogTitle sx={{ m: 0, p: 2 }}>
+              {model.ops} Interview Round
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+                onClick={handleModelClose}
+              >
+                {" "}
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
 
-          <DialogContent dividers>
-            {model.ops !== "Delete" ? (
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextInput
-                    label="Interview Round Name"
-                    name="interviewRoundName"
-                  />
+            <DialogContent dividers>
+              {model.ops !== "Delete" ? (
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextInput
+                      label="Interview Round Name"
+                      name="interviewRoundName"
+                    />
+                    <ErrorMessage touched={touched.interviewRoundName} errors={errors.interviewRoundName} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextInput
+                      label="Interview Round Description"
+                      name="interviewRoundDescription"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextInput
-                    label="Interview Round Description"
-                    name="interviewRoundDescription"
-                  />
-                </Grid>
-              </Grid>
-            ) : (
-              <Typography gutterBottom>
-                Are you sure want to delete this record?
-              </Typography>
-            )}
-          </DialogContent>
+              ) : (
+                <Typography gutterBottom>
+                  Are you sure want to delete this record?
+                </Typography>
+              )}
+            </DialogContent>
 
-          <DialogActions>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleModelClose}
-            >
-              {" "}
-              Cancel{" "}
-            </Button>
-            {model.ops !== "Delete" ? (
+            <DialogActions>
               <Button
                 variant="contained"
-                color="error"
-                startIcon={<SaveIcon />}
-                type="submit"
+                color="inherit"
+                onClick={handleModelClose}
               >
-                {model.ops}
+                {" "}
+                Cancel{" "}
               </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<DeleteIcon />}
-                type="submit"
-              >
-                {model.ops}
-              </Button>
-            )}
-          </DialogActions>
-        </Form>
+              {model.ops !== "Delete" ? (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<SaveIcon />}
+                  type="submit"
+                >
+                  {model.ops}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  type="submit"
+                >
+                  {model.ops}
+                </Button>
+              )}
+            </DialogActions>
+          </Form>
+        )}
       </Formik>
     );
   };

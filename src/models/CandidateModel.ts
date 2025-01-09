@@ -8,4 +8,5 @@ export interface candidateDataModel {
   statusId: string;
   resumeFile: string;
   resume?: string;
+  driveLink?: string;
 }

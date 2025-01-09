@@ -32,6 +32,7 @@ import {
 } from "../../../models/StatusModel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorMessage from "../../../common/Controls/ErrorMessage";
 
 const Status: React.FC = () => {
   const [StatusData, setStatusData] = useState<selectStatusDataModel[]>([]);
@@ -163,7 +164,6 @@ const Status: React.FC = () => {
     };
 
     const onFormSubmit = async (values: postStatusDataModel) => {
-      debugger;
       let res;
       if (model.ops === "Save" || model.ops === "Update")
         res = await insertUpdateStatus(values);
@@ -182,6 +182,7 @@ const Status: React.FC = () => {
         onSubmit={onFormSubmit}
         enableReinitialize
       >
+        {({touched, errors}) => (
         <Form id={`${model.ops}Status`}>
           <DialogTitle sx={{ m: 0, p: 2 }}>
             {model.ops} Status
@@ -204,6 +205,7 @@ const Status: React.FC = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextInput label="Status Name" name="statusName" />
+                  <ErrorMessage touched={touched.statusName} errors={errors.statusName} />
                 </Grid>
                 <Grid item xs={12}>
                   <TextInput
@@ -242,6 +244,7 @@ const Status: React.FC = () => {
             </Button>
           </DialogActions>
         </Form>
+        )}
       </Formik>
     );
   };
